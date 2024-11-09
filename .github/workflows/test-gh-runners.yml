@@ -1,0 +1,17 @@
+name: "Test GitHub Runners"
+concurrency:
+  group: github-test
+  cancel-in-progress: false
+on:
+  workflow_dispatch:
+      
+permissions:
+  # allow read repository's content by steps
+  contents: read
+jobs:
+  arc-krd-test:
+    name: Test ARC KRD Runners
+    runs-on: arc-runner-set
+    steps:
+      - name: Test Runner
+        run: echo $HOSTNAME
