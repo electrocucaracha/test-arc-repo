@@ -1,0 +1,11 @@
+name: "Test GitHub Kubevirt Runners"
+on:
+  workflow_dispatch:
+      
+jobs:
+  arc-kubevirt-test:
+    name: Test KuberVirt KRD Runners
+    runs-on: kubevirt-runner-set
+    steps:
+      - name: Test Runner
+        run: echo $HOSTNAME
