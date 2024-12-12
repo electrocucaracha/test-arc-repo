@@ -11,7 +11,7 @@ permissions:
 jobs:
   arc-krd-test:
     name: Test ARC KRD Runners
-    runs-on: arc-runner-set
+    runs-on: self-runner
     steps:
       - name: Test Runner
         run: echo $HOSTNAME

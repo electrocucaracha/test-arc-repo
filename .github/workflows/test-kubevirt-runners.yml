@@ -5,13 +5,30 @@ on:
 jobs:
   arc-kubevirt-test:
     name: Test KuberVirt KRD Runners
-    runs-on: kubevirt-runner-set
+    runs-on: vm-self-runner
     steps:
-      - name: Show current state
-        run: ls /tmp
-      - name: Create a directory
-        run: mktemp -d
-      - name: Create a file
-        run: touch "/tmp/$(date +"%T")"
-      - name: Show current state
-        run: ls /tmp
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # refs/tags/v4.1.7
+      - name: Vagrant demo
+        run: |
+          pushd "$(mktemp -d)"
+          cat <<EOT >vagrant_file.erb
+          Vagrant.configure("2") do |config|
+            config.vm.box = "<%= box_name %>"
+          
+            [:virtualbox, :libvirt].each do |provider|
+            config.vm.provider provider do |p|
+                p.cpus = 2
+                p.memory = 1024
+              end
+            end
+          end
+          EOT
+          vagrant init generic/alpine316 --box-version 3.5.0 --template vagrant_file.erb
+          vagrant up || :
+          vagrant halt
+          vagrant package
+          if [ ! -f package.box ]; then
+              warn "Vagrant couldn't package the running box"
+          fi
+          vagrant destroy -f || :
+          popd
