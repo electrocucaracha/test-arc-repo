@@ -10,10 +10,14 @@ jobs:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # refs/tags/v4.1.7
       - name: Vagrant demo
         run: |
+          export VAGRANT_DEFAULT_PROVIDER=virtualbox
           vagrant box list
           pushd "$(mktemp -d)"
           cat <<EOT >vagrant_file.erb
           Vagrant.configure("2") do |config|
+            config.vm.provider :libvirt
+            config.vm.provider :virtualbox
+
             config.vm.box = "<%= box_name %>"
           
             [:virtualbox, :libvirt].each do |provider|
