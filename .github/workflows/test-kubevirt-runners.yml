@@ -10,6 +10,8 @@ jobs:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # refs/tags/v4.1.7
       - name: Vagrant demo
         run: |
+          sudo grep "^[^#*/;]" /etc/apt/sources.list ||:
+          sudo apt update
           sudo apt search virtualbox
           sudo cat /etc/profile.d/vagrant.sh
           echo $VAGRANT_DEFAULT_PROVIDER
