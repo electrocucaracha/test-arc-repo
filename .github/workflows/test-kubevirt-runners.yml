@@ -10,11 +10,6 @@ jobs:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # refs/tags/v4.1.7
       - name: Vagrant demo
         run: |
-          sudo grep "^[^#*/;]" /etc/apt/sources.list ||:
-          sudo apt update
-          sudo apt search virtualbox
-          sudo cat /etc/profile.d/vagrant.sh
-          echo $VAGRANT_DEFAULT_PROVIDER
           vagrant box list
           pushd "$(mktemp -d)"
           cat <<EOT >vagrant_file.erb
@@ -34,6 +29,7 @@ jobs:
           EOT
           vagrant init generic/alpine316 --box-version 3.5.0 --template vagrant_file.erb
           vagrant up || :
+          VBoxManage list runningvms
           vagrant halt
           vagrant package
           if [ ! -f package.box ]; then
@@ -41,3 +37,5 @@ jobs:
           fi
           vagrant destroy -f || :
           popd
+          cat ~/.config/VirtualBox/*.log
+          cat ~/VirtualBox\ VMs/*/Logs/*.log
