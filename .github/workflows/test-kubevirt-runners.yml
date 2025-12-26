@@ -38,4 +38,4 @@ jobs:
           vagrant destroy -f || :
           popd
           cat ~/.config/VirtualBox/*.log
-          cat ~/VirtualBox\ VMs/*/Logs/*.log
+          sudo df -h
